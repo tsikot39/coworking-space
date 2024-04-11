@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Owner Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo">
+          <h1>CoWorking Space</h1>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html">Logout</a></li>
+            <li id="loggedInUser"></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="property-table">
+        <h2 class="dashboard-heading">
+          Property Manager Hub: List and Manage Your Rental Spaces
+        </h2>
+        <div id="counts">
+          <span class="legend red-bullet"></span> Number of Properties:<span
+            id="propertyCount"
+            >0</span
+          >
+
+          <span class="legend blue-bullet"></span> Number of Workspaces:
+          <span id="workspaceCount">0</span>
+        </div>
+        <div class="property-header">
+          <h3>List of Properties</h3>
+          <div class="add-property-container">
+            <button id="addPropertyBtn" class="btn">Add Property</button>
+          </div>
+        </div>
+        <table id="propertyTable">
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Neighborhood</th>
+              <th>Square Feet</th>
+              <th>Parking</th>
+              <th>Public Transportation</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="propertyTableBody">
+            <!-- Table rows will be added dynamically here -->
+          </tbody>
+        </table>
+        <br /><br />
+        <!-- Workspace Table -->
+        <table id="workspaceTable">
+          <div class="property-header">
+            <h3 id="workspaceListHeader">
+              Workspace details for Property: <span></span>
+            </h3>
+          </div>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Seat Number</th>
+              <th>Allow Smoking</th>
+              <th>Date Available</th>
+              <th>Lease Term</th>
+              <th>Price</th>
+              <th>Contact Information</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <!-- Table body -->
+          <tbody id="workspaceTableBody">
+            <!-- Table rows will be populated dynamically -->
+          </tbody>
+        </table>
+
+        <!-- No Data Message -->
+        <div id="noDataMessage" class="no-data" style="display: none">
+          No workspace data available
+        </div>
+      </div>
+    </main>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Edit Property</h3>
+        <form id="editForm">
+          <div class="form-group">
+            <input type="hidden" id="editPropertyId" name="editPropertyId" />
+          </div>
+          <div class="form-group">
+            <label for="editAddress">Address:</label>
+            <input type="text" id="editAddress" name="editAddress" required />
+          </div>
+          <div class="form-group">
+            <label for="editNeighborhood">Neighborhood:</label>
+            <select id="editNeighborhood" name="editNeighborhood" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="Downtown">Downtown</option>
+              <option value="Residential">Residential</option>
+              <option value="Suburban">Suburban</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editSquareFeet">Square Feet:</label>
+            <input
+              type="number"
+              id="editSquareFeet"
+              name="editSquareFeet"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="editParking">Parking:</label>
+            <select id="editParking" name="editParking" required>
+              <option value="Yes" selected>Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editPublicTransportation">Public Transportation:</label>
+            <select
+              id="editPublicTransportation"
+              name="editPublicTransportation"
+              required
+            >
+              <option value="Yes" selected>Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input type="submit" value="Submit" />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmationModal" class="modal">
+      <div class="modal-content">
+        <h3>Delete Property Confirmation</h3>
+        <p>Are you sure you want to delete this property?</p>
+        <div class="btn-container">
+          <button id="confirmDeleteBtn" class="btn">Yes</button>
+          <button id="cancelDeleteBtn" class="btn">No</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Workspace Confirmation Modal -->
+    <div id="deleteWorkspaceConfirmationModal" class="modal">
+      <div class="modal-content">
+        <h3>Delete Workspace Confirmation</h3>
+        <p>Are you sure you want to delete this workspace?</p>
+        <button id="confirmWorkspaceDeleteBtn" class="btn">Yes</button>
+        <button id="cancelWorkspaceDeleteBtn" class="btn">No</button>
+      </div>
+    </div>
+
+    <!-- Modal for Adding Property -->
+    <div id="addPropertyModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Add Property</h3>
+        <form id="addPropertyForm">
+          <div class="form-group">
+            <label for="addAddress">Address:</label>
+            <input type="text" id="addAddress" name="addAddress" required />
+          </div>
+          <div class="form-group">
+            <label for="addNeighborhood">Neighborhood:</label>
+            <select id="addNeighborhood" name="addNeighborhood" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="Downtown">Downtown</option>
+              <option value="Residential">Residential</option>
+              <option value="Suburban">Suburban</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="addSquareFeet">Square Feet:</label>
+            <input
+              type="number"
+              id="addSquareFeet"
+              name="addSquareFeet"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="addParking">Parking:</label>
+            <select id="addParking" name="addParking" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="addPublicTransportation">Public Transportation:</label>
+            <select
+              id="addPublicTransportation"
+              name="addPublicTransportation"
+              required
+            >
+              <option value="" disabled selected>Select an option</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input type="submit" value="Submit" />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal for Adding Workspace -->
+    <div id="addWorkspaceModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Add Workspace</h3>
+        <form id="addWorkspaceForm">
+          <div class="form-group">
+            <input type="hidden" id="propertyId" name="propertyId" value="" />
+          </div>
+          <div class="form-group">
+            <label for="addtype">Type:</label>
+            <select id="addtype" name="addtype" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="Meeting Rooms">Meeting Rooms</option>
+              <option value="Private Office Rooms">Private Office Rooms</option>
+              <option value="Desks">Desks</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="addseat">Number of Seat:</label>
+            <input type="number" id="addseat" name="addseat" required />
+          </div>
+          <div class="form-group">
+            <label for="addsmoking">Allow Smoking:</label>
+            <select id="addsmoking" name="addsmoking" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="adddateavailable">Date Available:</label>
+            <input
+              type="date"
+              id="adddateavailable"
+              name="adddateavailable"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="addleaseterm">Lease Term:</label>
+            <select id="addleaseterm" name="addleaseterm" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="Day">Day</option>
+              <option value="Week">Week</option>
+              <option value="Month">Month</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="addprice">Price:</label>
+            <input type="text" id="addprice" name="addprice" required />
+          </div>
+          <div class="form-group">
+            <label for="addcontact">Contact Information:</label>
+            <input type="text" id="addcontact" name="addcontact" required />
+          </div>
+          <div class="form-group">
+            <input type="submit" value="Submit" />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Workspace Modal -->
+    <div id="editWorkspaceModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Edit Workspace</h3>
+        <form id="editWorkspaceForm">
+          <div class="form-group">
+            <input
+              type="hidden"
+              id="editWorkspaceId"
+              name="editWorkspaceId"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="hidden"
+              id="editPropertyId"
+              name="editPropertyId"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="editType">Type:</label>
+            <select id="editType" name="editType" required>
+              <option value="Meeting Rooms">Meeting Rooms</option>
+              <option value="Private Office Rooms">Private Office Rooms</option>
+              <option value="Desks">Desks</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editSeatNumber">Number of Seat:</label>
+            <input
+              type="number"
+              id="editSeatNumber"
+              name="editSeatNumber"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="editAllowSmoking">Allow Smoking:</label>
+            <select id="editAllowSmoking" name="editAllowSmoking" required>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editDateAvailable">Date Available:</label>
+            <input
+              type="date"
+              id="editDateAvailable"
+              name="editDateAvailable"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="editLeaseTerm">Lease Term:</label>
+            <select id="editLeaseTerm" name="editLeaseTerm" required>
+              <option value="Day">Day</option>
+              <option value="Week">Week</option>
+              <option value="Month">Month</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editPrice">Price:</label>
+            <input type="text" id="editPrice" name="editPrice" required />
+          </div>
+          <div class="form-group">
+            <label for="editContactInformation">Contact Information:</label>
+            <input
+              type="text"
+              id="editContactInformation"
+              name="editContactInformation"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input type="submit" value="Submit" />
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2024 CoWorking Space. All rights reserved.</p>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="owner-property-list.js"></script>
+  </body>
+</html>
