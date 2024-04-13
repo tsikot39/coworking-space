@@ -10,7 +10,7 @@
     "mongodb": "^6.5.0",
     "mongoose": "^8.2.4"
   },
-  "name": "phase1_webapp",
+  "name": "phase2_backend_group2",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
@@ -19,9 +19,9 @@
     "dev": "nodemon app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Johnson Benedict Corpus, Paula Gomez Perez, Aimerie Cheyne Calinisan",
   "license": "ISC",
-  "description": "",
+  "description": "CoWorkingSpace",
   "devDependencies": {
     "nodemon": "^3.1.0"
   }

@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
       addPropertyModal.style.display = "none";
     }
 
-    // Add this new condition for the editWorkspaceModal
     if (event.target == editWorkspaceModal) {
       editWorkspaceModal.style.display = "none";
     }
@@ -76,7 +75,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // MODAL FUNCTIONALITY
   var modal = document.getElementById("editModal");
 
-  // MODIFY YOUR EVENT LISTENER FOR EDIT BUTTON CLICK TO FETCH THE _ID FROM THE DATA ATTRIBUTE
   document
     .getElementById("propertyTableBody")
     .addEventListener("click", function (event) {
@@ -94,7 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var propertyId = document.getElementById("editPropertyId").value; // Changed from getAttribute to value
 
-    // Prepare the updated property data
     var updatedPropertyData = {
       address: editForm.editAddress.value,
       neighborhood: editForm.editNeighborhood.value,
@@ -204,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("confirmDeleteBtn")
     .addEventListener("click", function () {
-      var propertyId = this.getAttribute("data-id"); // Ensure this is set correctly when opening the modal
+      var propertyId = this.getAttribute("data-id");
 
       // Send DELETE request to the server to delete the property
       fetch(`/properties/${propertyId}`, {
@@ -232,7 +229,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function clearWorkspaceTable() {
     var tableBody = document.getElementById("workspaceTableBody");
-    tableBody.innerHTML = ""; // This clears the workspace table. You might adjust this to repopulate if needed.
+    tableBody.innerHTML = "";
   }
 
   function closeModal(modalId) {
@@ -258,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("cancelDeleteBtn")
     .addEventListener("click", function () {
-      closeModal("deleteConfirmationModal"); // Simply close the modal
+      closeModal("deleteConfirmationModal");
     });
 
   // Retrieve logged-in user's information from local storage
@@ -326,9 +323,8 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(`/properties/${propertyId}`)
           .then((response) => response.json())
           .then((property) => {
-            // Now call updateWorkspaceHeader with the fetched address
             updateWorkspaceHeader(property.address);
-            populateWorkspaceTable(propertyId); // Existing functionality
+            populateWorkspaceTable(propertyId);
           })
           .catch((error) =>
             console.error("Error fetching property details:", error)
@@ -345,7 +341,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-  // Assuming your add workspace form has an id of "addWorkspaceForm"
   var addWorkspaceForm = document.getElementById("addWorkspaceForm");
   addWorkspaceForm.addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent default form submission
@@ -407,7 +402,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (workspaces.length === 0) {
           // Display "No workspace found."
           var noWorkspaceRow = document.createElement("tr");
-          noWorkspaceRow.innerHTML = `<td colspan="8" style="text-align: center;">No workspace found.</td>`; // Adjust the colspan to match your number of columns
+          noWorkspaceRow.innerHTML = `<td colspan="8" style="text-align: center;">No workspace found.</td>`;
           tableBody.appendChild(noWorkspaceRow);
         } else {
           workspaces.forEach(function (workspace) {
@@ -436,19 +431,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function clearWorkspaceTable() {
     var tableBody = document.getElementById("workspaceTableBody");
-    tableBody.innerHTML = ""; // This effectively clears the table
+    tableBody.innerHTML = "";
   }
 
   function updateWorkspaceHeader(address) {
     var headerSpan = document.querySelector("#workspaceListHeader span");
     headerSpan.textContent = `${address}`;
-    headerSpan.style.color = "red"; // Apply red color to the text
+    headerSpan.style.color = "red";
   }
 
   function clearWorkspaceHeader() {
     const headerSpan = document.querySelector("#workspaceListHeader span");
     if (headerSpan) {
-      headerSpan.textContent = ""; // Resets the text content
+      headerSpan.textContent = "";
     }
   }
 
@@ -501,7 +496,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return response.json();
           })
           .then((workspace) => {
-            // Assuming you have fields like type, seatNumber, etc. in your workspace details
             document.getElementById("editWorkspaceId").value = workspace._id;
             document.getElementById("editPropertyId").value =
               workspace.propertyId;
@@ -511,7 +505,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("editAllowSmoking").value =
               workspace.allowSmoking ? "Yes" : "No";
             document.getElementById("editDateAvailable").value =
-              workspace.dateAvailable; // Ensure date format matches
+              workspace.dateAvailable;
             document.getElementById("editLeaseTerm").value =
               workspace.leaseTerm;
             document.getElementById("editPrice").value = workspace.price;
@@ -529,7 +523,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   function openEditWorkspaceModal(workspaceId) {
-    fetch(`/workspaces/details/${workspaceId}`) // Ensure you have an API endpoint for this or adjust accordingly
+    fetch(`/workspaces/details/${workspaceId}`)
       .then((response) => response.json())
       .then((workspace) => {
         document.getElementById("editWorkspaceId").value = workspace._id;
@@ -586,7 +580,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((data) => {
           console.log("Workspace updated:", data);
           closeModal("editWorkspaceModal"); // Close the modal upon successful update
-          populateWorkspaceTable(propertyId); // Optionally, re-fetch workspaces to update the UI
+          populateWorkspaceTable(propertyId); // re-fetch workspaces to update the UI
         })
         .catch((error) => {
           console.error("Error updating workspace:", error);
@@ -621,7 +615,6 @@ document.addEventListener("DOMContentLoaded", function () {
       var workspaceId = this.getAttribute("data-workspace-id"); // Retrieve the workspace ID stored earlier
       var propertyId = this.getAttribute("data-property-id");
 
-      // Assuming your endpoint to delete a workspace is something like "/delete-workspace/:id"
       fetch(`/delete-workspace/${workspaceId}`, {
         method: "DELETE",
       })
@@ -663,7 +656,6 @@ document.addEventListener("DOMContentLoaded", function () {
       var propertyId = this.getAttribute("data-property-id"); // Retrieve the property ID, assuming you have set it when opening the modal
 
       fetch(`/api/workspaces/${workspaceId}`, {
-        // Adjust the URL path as per your API structure
         method: "DELETE",
       })
         .then((response) => {

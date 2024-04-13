@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const { client } = require("../connection");
 
-// Registration
 exports.createUser = async (req, res) => {
   try {
     // Extract user data from request body

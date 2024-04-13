@@ -1,25 +1,25 @@
 require("dotenv").config();
 
 const express = require("express");
-const cors = require("cors"); // Import CORS package
+const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
 const { client, run } = require("./connection");
 const { ObjectId } = require("mongodb");
 
 const app = express();
-app.use(cors()); // Use CORS with default options
+app.use(cors());
 const path = require("path");
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 app.use(express.json());
-app.use("/api", userRoutes); // Mount the userRoutes on the /api path
+app.use("/api", userRoutes);
 
 // API ENDPOINT TO HANDLE REGISTRATION
 app.post("/register", async (req, res) => {
   const formData = req.body;
   try {
-    const db = client.db("Workspace"); // Replace with your database name
-    const collection = db.collection("Users"); // Replace with your collection name
+    const db = client.db("Workspace");
+    const collection = db.collection("Users");
     const result = await collection.insertOne(formData);
     res.status(201).json(result);
   } catch (error) {
@@ -29,11 +29,10 @@ app.post("/register", async (req, res) => {
 
 // API ENDPOINT TO ADD A NEW PROPERTY
 app.post("/add-property", async (req, res) => {
-  // const propertyData = req.body; // Get property data from request body
   const propertyData = { ...req.body, createdAt: new Date() };
   try {
-    const db = client.db("Workspace"); // Adjust with your database name if different
-    const collection = db.collection("Properties"); // Create or specify the collection for properties
+    const db = client.db("Workspace");
+    const collection = db.collection("Properties");
     const result = await collection.insertOne(propertyData);
     res.status(201).json({ message: "Property added successfully", result });
   } catch (error) {
@@ -179,8 +178,8 @@ app.delete("/properties/:id", async (req, res) => {
 app.post("/add-workspace", async (req, res) => {
   const workspaceData = req.body; // Get workspace data from request body
   try {
-    const db = client.db("Workspace"); // Use your MongoDB database name
-    const collection = db.collection("Workspaces"); // Use the "Workspaces" collection
+    const db = client.db("Workspace");
+    const collection = db.collection("Workspaces");
     const result = await collection.insertOne(workspaceData);
     res.status(201).json({ message: "Workspace added successfully", result });
   } catch (error) {

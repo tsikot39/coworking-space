@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
       errorMessageElement.textContent =
         "Password must be at least 8 characters long and include uppercase and lowercase letters, a number, and a special character.";
       errorMessageElement.style.display = "block";
-      return; // Stop form submission
+      return;
     }
 
     fetch("/api/register", {

@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     .addEventListener("click", function () {
       // Clear input fields
       document.getElementById("address").value = "";
-      document.getElementById("neighborhood").selectedIndex = 0; // Resets to the first option, assuming it's the placeholder
+      document.getElementById("neighborhood").selectedIndex = 0;
       document.getElementById("squarefeet").value = "";
       document.getElementById("parking").selectedIndex = 0;
       document.getElementById("public-transpo").selectedIndex = 0;
